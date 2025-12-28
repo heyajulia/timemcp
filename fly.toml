@@ -9,7 +9,6 @@ primary_region = 'ams'
 [build]
 
 [env]
-ALLOWED_HOSTS = 'timemcp.fly.dev'
 HOST = '0.0.0.0'
 PORT = '8000'
 

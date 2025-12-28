@@ -2,14 +2,17 @@
 
 A simple MCP server that provides the current time in any timezone.
 
+## Building
+
+```bash
+go build
+```
+
 ## Running the Server
 
 ```bash
-uv run python main.py
+./timemcp
 ```
-
-**Important:** Do NOT use `uv run mcp run main.py` - that command seemingly only supports `stdio` and `sse` transports,
-not `streamable-http`.
 
 ## Connecting from Claude Web UI
 
@@ -23,29 +26,13 @@ https://your-hostname:8000/mcp
 
 ### Environment Variables
 
-| Variable        | Default   | Description                               |
-| --------------- | --------- | ----------------------------------------- |
-| `HOST`          | `0.0.0.0` | Host/IP to bind to                        |
-| `PORT`          | `8000`    | Port to listen on                         |
-| `ALLOWED_HOSTS` | (none)    | Comma-separated list of allowed hostnames |
+| Variable | Default                 | Description        |
+| -------- | ----------------------- | ------------------ |
+| `HOST`   | (empty, all interfaces) | Host/IP to bind to |
+| `PORT`   | `8000`                  | Port to listen on  |
 
 Example:
 
 ```bash
-PORT=3000 ALLOWED_HOSTS=my-server.example.com,other-host.local uv run python main.py
+HOST=localhost PORT=3000 ./timemcp
 ```
-
-### Allowed Hosts (DNS Rebinding Protection)
-
-The MCP SDK includes DNS rebinding protection that validates the `Host` header. If you're accessing the server through a
-proxy or custom domain (e.g., Tailscale), you'll get `421 Misdirected Request` errors. Add any required hosts via the
-`ALLOWED_HOSTS` environment variable.
-
-## Tool
-
-### `time`
-
-Get the current time in a given timezone.
-
-- **Parameter:** `tz` - Timezone string (default: "Europe/Amsterdam")
-- **Returns:** Formatted time string like "Sunday, 28 December 2025 16:07:02 CET"

@@ -1,26 +1,25 @@
-FROM ghcr.io/astral-sh/uv:bookworm-slim AS exporter
-
-WORKDIR /app
-COPY pyproject.toml uv.lock ./
-RUN uv export --frozen --no-dev -o requirements.txt
-
-FROM python:3.14-slim-bookworm
+FROM golang:1.25-bookworm AS builder
 
 WORKDIR /app
 
-RUN groupadd --gid 1000 appgroup && \
-    useradd --uid 1000 --gid 1000 --shell /bin/bash appuser
+COPY go.mod go.sum ./
 
-COPY --from=exporter /app/requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
+RUN go mod download
 
-COPY --chown=appuser:appgroup main.py ./
+COPY main.go ./
+
+RUN CGO_ENABLED=0 go build -o timemcp -trimpath -ldflags="-s -w" .
+
+FROM gcr.io/distroless/static-debian12:nonroot
+
+COPY --from=builder --chown=nonroot:nonroot /app/timemcp /home/nonroot/timemcp
 
 ENV HOST=0.0.0.0
-ENV PORT=8080
 
-EXPOSE 8080
+ENV PORT=8000
 
-USER appuser
+EXPOSE 8000
 
-CMD ["python", "main.py"]
+USER nonroot
+
+ENTRYPOINT ["/home/nonroot/timemcp"]
