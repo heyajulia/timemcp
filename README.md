@@ -22,6 +22,12 @@ When adding this as a custom MCP connector in Claude's web UI, use the `/mcp` pa
 https://your-hostname:8000/mcp
 ```
 
+A public instance is available at:
+
+```
+https://timemcp.fly.dev/mcp
+```
+
 ## Configuration
 
 ### Environment Variables
