@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"time"
-	_ "time/tzdata"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
